@@ -22,25 +22,42 @@ RUN         apt update \
             # porgインストール
             && wget ${PORG_SRC_URL} && tar -zxvf ${PORG_SRC_FILE} && cd porg-${PORG_VERSION} \
                 && ./configure --prefix=${PORG_DEST} --disable-grop   && make && make install \
+                && cd ../ \
             # gawkインストール
             && wget ${GAWK_URL} && tar -Jxvf ${GAWK_SRC_FILE} && cd ${GAWK_NAME} \
                 &&  ./configure --prefix=${GAWK_DEST} \
                 && make && make install  \
             # 
             && /usr/local/sh/system/apt-install.sh uninstall gccdev.txt \
-                && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/* \
-                && cd ../ && rm -rf ${GAWK_DEST}*
+                && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
 FROM        kagalpandh/kacpp-ja
 SHELL       [ "/bin/bash", "-c" ]
 WORKDIR     /root
+# porgとGAWK関連環境変数
 ENV         PORG_VERSION=0.10
 ENV         PORG_DEST=porg-${PORG_VERSION}
 ENV         GAWK_VERSION=5.1.0
 ENV         GAWK_DEST=gawk-${GAWK_VERSION}
-COPY        --from=builder /root/${PORG_DEST} /root
-COPY        --from=builder /root/${GAWK_DEST} /root
+# 管理者用グループとユーザー関連環境変数
+ENV         ADMIN_GID=116
+ENV         ADMIN_GROUP_NAME=admin
+ENV         ADMIN_USER_NAME=dockeradmin
+RUN         mkdir /root/${PORG_DEST} && mkdir /root/${GAWK_DEST}
+COPY        --from=builder /root/${PORG_DEST}/ /root/${PORG_DEST}
+COPY        --from=builder /root/${GAWK_DEST}/ /root/${GAWK_DEST}
+COPY        skel/*  /etc/skel
 # COPY        rcprofile /etc/rc.d
 RUN         apt update && \
             cp -rf ${PORG_DEST}/* /usr/local && porg -l -p ${GAWK_DEST} "cp -rf ${GAWK_DEST}/* /usr/local" && \
-            cd ~/ && apt clean && rm -rf /var/lib/apt/lists/* && rm -rf /root/${PORG_DEST} && \
+            # sudo, gnupg, wgetのインストール
+            apt install -y sudo wget && \
+            # 管理者用グループとユーザー作成
+            groupadd -g ${ADMIN_GID} ${ADMIN_GROUP_NAME} && \
+                useradd -m -s /bin/bash -d /home/${ADMIN_USER_NAME} -g ${ADMIN_GROUP_NAME} \
+                    -G ${ADMIN_GROUP_NAME} -c "docker admin" ${ADMIN_USER_NAME} && \
+            # sudoの設定 adminグループにsudoを全て許可する
+            echo "%admin ALL=(root) NOPASSWD: ALL" >>/etc/sudoers && \
+            #終了処理 
+            cd ~/ && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/* && rm -rf /root/${PORG_DEST} && \
             rm -rf /root/${GAWK_DEST}
+
