@@ -49,6 +49,7 @@ COPY        skel/*  /etc/skel
 # COPY        rcprofile /etc/rc.d
 RUN         apt update && \
             cp -rf ${PORG_DEST}/* /usr/local && porg -l -p ${GAWK_DEST} "cp -rf ${GAWK_DEST}/* /usr/local" && \
+            echo "/usr/local/lib" >>/etc/ld.so.conf && \
             # sudo, gnupg, wgetのインストール
             apt install -y sudo wget && \
             # 管理者用グループとユーザー作成
