@@ -1,39 +1,34 @@
-# kacpp-pydev Python開発環境Dockerイメージ
+# kagalpandh/kacpp-base ベースとなるDockerイメージ
 
 ## 概要
-Pythonをソースからインストールして設定したDockerイメージ。
-Pythonのソースは3.9.2である。
-debian:buster-slimイメージを基に作成されている。
+マルチユーザー用にするためにsudoをいれ基本的なコマンドも追加したイメージ。
+管理者グループと管理者ユーザーを作成してある。
+またソースコードパッケッジ管理porgも入れてある。
 
 ## 使い方
 ```shell
-docker image pull kagalpandh/kacpp-pydev
-docker run -dit --name kacpp-ja kagalpandh/kacpp-pydev
+docker image pull kagalpandh/kacpp-base
+docker run -dit --name kacpp-base kagalpandh/kacpp-base
 ```
 
 ## 説明
-Pythonをソースからインストールしてある。
-<!--
-porgでインストールしてあり
-```shell
-porg -f Python-3.9.2
-```
-でファイル一覧を見ることができる。
--->
-インストール場所は/usr/local/Python-{PYTHON_VERSION}である。
-Pythonをコンパイルする際にgccなどを使用するがこのイメージにはGCC開発環境は
-インストールされていない。
-
+マルチユーザー用にイメージを作り変えてある。また基本的なコマンドを入れてある。
+gawk, wgetなど。
+ただやっていることはsudoの設定のみである。
+管理者用グループadmin(116)と菅流者用ユーザーdockeradminを作成してある。
+adminグループはsudoをroot権限で実行可能。
+ソースパッケッジ管理porgもコンパイルして入れてあり使用可能である。
 
 ##構成
-Pythonのインストール場所は/usr/local/Python-${PYTHON_VERSION}である。
-これをPYTHON_HOMEという環境変数で参照できここに/usr/local/pythonでリンクが貼ってある。
-PATHもとうしてある(/usr/local/Python-{VERSION}/bin)。
+管理者用グループadmin(116)と管理者用ユーザーdockeradminを使用できる。
+sudoでadminグループはrootでコマンドを実行可能。
+またporgでソースコードからのパッケージ管理もできる。
+基本的なコマンドとしてgawkがコンパイルして入れてありporgで情報を見ることができる。
 
 ##ベースイメージ
 kagalpandh/kacpp-ja
 
 # その他
-DockerHub: [kagalpandh/kacpp-ja](https://hub.docker.com/repository/docker/kagalpandh/kacpp-gccdev)<br />
-GitHub: [karakawa88/kacpp-ja](https://github.com/karakawa88/kacpp-ja)
+DockerHub: [kagalpandh/kacpp-base](https://hub.docker.com/repository/docker/kagalpandh/kacpp-gccdev)<br />
+GitHub: [karakawa88/kacpp-base](https://github.com/karakawa88/kacpp-ja)
 
