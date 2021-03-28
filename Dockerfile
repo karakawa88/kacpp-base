@@ -25,7 +25,7 @@ RUN         apt update \
 #                 && cd ../ \
             # gawkインストール
             && wget ${GAWK_URL} && tar -Jxvf ${GAWK_SRC_FILE} && cd ${GAWK_NAME} \
-                &&  ./configure --prefix=${GAWK_DEST} \
+                &&  ./configure --prefix=/usr/local/${GAWK_NAME} \
                 && make && make install  \
             # 
             && /usr/local/sh/system/apt-install.sh uninstall gccdev.txt \
@@ -49,7 +49,7 @@ ENV         ADMIN_USER_NAME=dockeradmin
 # シェルスクリプトディレクトリ
 ENV         SH=/usr/local/sh
 ENV         PATH=${SH}/system:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
-COPY        --from=builder /root/${GAWK_DEST}/ /usr/local
+COPY        --from=builder /usr/local/${GAWK_DEST}/ /usr/local
 COPY        skel/*  /etc/skel
 RUN         mkdir /usr/local/sh
 COPY        sh/ /usr/local/sh
