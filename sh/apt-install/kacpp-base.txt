@@ -1,0 +1,6 @@
+procps
+iproute2
+iputils-ping
+curl
+wget
+gnupg

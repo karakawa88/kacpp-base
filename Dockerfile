@@ -45,22 +45,31 @@ ENV         ADMIN_USER_NAME=dockeradmin
 # RUN         mkdir /root/${PORG_DEST} && \
 #             mkdir /root/${GAWK_DEST}
 # COPY        --from=builder /root/${PORG_DEST}/ /root/${PORG_DEST}
+# APTインストール・削除スクリプト環境変数
+# シェルスクリプトディレクトリ
+ENV         SH=/usr/local/sh
+ENV         PATH=${SH}/system:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 COPY        --from=builder /root/${GAWK_DEST}/ /usr/local
 COPY        skel/*  /etc/skel
-COPY        apt-install.txt /root
+RUN         mkdir /usr/local/sh
+COPY        sh/ /usr/local/sh
 # COPY        rcprofile /etc/rc.d
 RUN         apt update && \
-            cat apt-install.txt | xargs apt install -y && \
 #             cp -rf ${PORG_DEST}/* /usr/local && LD_PRELOAD="" porg -l -p ${GAWK_DEST} "cp -rf ${GAWK_DEST}/* /usr/local" && \
             echo "/usr/local/lib" >>/etc/ld.so.conf && ldconfig && \
-            # sudo, gnupg, wgetのインストール
-            apt install -y sudo wget && \
             # 管理者用グループとユーザー作成
             groupadd -g ${ADMIN_GID} ${ADMIN_GROUP_NAME} && \
                 useradd -m -s /bin/bash -d /home/${ADMIN_USER_NAME} -g ${ADMIN_GROUP_NAME} \
                     -G ${ADMIN_GROUP_NAME} -c "docker admin" ${ADMIN_USER_NAME} && \
             # sudoの設定 adminグループにsudoを全て許可する
             echo "%admin ALL=(root) NOPASSWD: ALL" >>/etc/sudoers && \
+            # SHディレクトリ
+            chown -R root.admin ${SH} && \
+                find ${SH} -name "*.sh" -exec chmod 775 {} \; && \ 
+                find ${SH} -type d -exec chmod 3775 {} \; && \
+            # 基本的なパッケージのインストール
+            # パッケージのリストは/usr/local/sh/apt-install/kacpp-base.txtにある。
+            $SH/system/apt-install.sh install kacpp-base.txt && \
             #終了処理 
             cd ~/ && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/* && \
 #             rm -rf /root/${PORG_DEST} && \
