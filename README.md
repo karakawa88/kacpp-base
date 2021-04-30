@@ -20,9 +20,7 @@ gawk, wgetなど。
 管理者用グループadmin(116)と管理者用ユーザーdockeradminを作成してある。
 adminグループはsudoをroot権限で実行可能。
 APTパッケージをAPTリストファイルをもとにインストール削除するapt-install.shスクリプトがある。
-<!--
-ソースパッケッジ管理porgもコンパイルして入れてあり使用可能である。
--->
+
 ### SH シェルスクリプトディレクトリ
 管理用シェルスクリプトが格納されるディレクトリ。
 環境変数SHで参照できる。
@@ -52,11 +50,6 @@ sudoでadminグループはrootでコマンドを実行可能。
 APTリストスクリプト     /usr/local/sh/system/apt-install.sh
 APTリストディレクトリ   /usr/local/sh/apt-install
 このイメージで使用するのはkacpp-base.txtである。
-
-<!--
-またporgでソースコードからのパッケージ管理もできる。
-基本的なコマンドとしてgawkがコンパイルして入れてありporgで情報を見ることができる。
--->
 
 ##ベースイメージ
 kagalpandh/kacpp-ja
