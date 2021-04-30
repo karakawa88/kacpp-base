@@ -4,3 +4,6 @@ iputils-ping
 curl
 wget
 gnupg
+sudo
+binutils
+
