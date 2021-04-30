@@ -17,7 +17,6 @@ RUN         apt update \
             && wget ${GAWK_URL} && tar -Jxvf ${GAWK_SRC_FILE} && cd ${GAWK_NAME} \
                 &&  ./configure --prefix=/usr/local/${GAWK_NAME} \
                 && make && make install  \
-            # 
             && /usr/local/sh/system/apt-install.sh uninstall gccdev.txt \
                 && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
 FROM        kagalpandh/kacpp-ja
@@ -57,5 +56,5 @@ RUN         apt update && \
             #終了処理 
             cd ~/ && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/* && \
 #             rm -rf /root/${PORG_DEST} && \
-            rm -rf /root/${GAWK_DEST} && \
+            rm -rf /root/${GAWK_DEST}
 
