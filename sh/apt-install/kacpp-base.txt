@@ -6,4 +6,5 @@ wget
 gnupg
 sudo
 binutils
-
+# Git
+git
