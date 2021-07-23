@@ -26,9 +26,9 @@ WORKDIR     /root
 ENV         GAWK_VERSION=5.1.0
 ENV         GAWK_DEST=gawk-${GAWK_VERSION}
 # 管理者用グループとユーザー関連環境変数
-ENV         ADMIN_GID=116
-ENV         ADMIN_GROUP_NAME=admin
-ENV         ADMIN_USER_NAME=dockeradmin
+# ENV         ADMIN_GID=116
+# ENV         ADMIN_GROUP_NAME=admin
+# ENV         ADMIN_USER_NAME=dockeradmin
 # APTインストール・削除スクリプト環境変数
 # シェルスクリプトディレクトリ
 ENV         SH=/usr/local/sh
@@ -42,19 +42,18 @@ RUN         apt update && \
             # 基本的なパッケージのインストール
             # パッケージのリストは/usr/local/sh/apt-install/kacpp-base.txtにある。
             $SH/system/apt-install.sh install kacpp-base.txt && \
-            echo "/usr/local/lib" >>/etc/ld.so.conf && ldconfig && \
+#             echo "/usr/local/lib" >>/etc/ld.so.conf && ldconfig && \
             # 管理者用グループとユーザー作成
-            groupadd -g ${ADMIN_GID} ${ADMIN_GROUP_NAME} && \
-                useradd -m -s /bin/bash -d /home/${ADMIN_USER_NAME} -g ${ADMIN_GROUP_NAME} \
-                    -G ${ADMIN_GROUP_NAME} -c "docker admin" ${ADMIN_USER_NAME} && \
+#             groupadd -g ${ADMIN_GID} ${ADMIN_GROUP_NAME} && \
+#                 useradd -m -s /bin/bash -d /home/${ADMIN_USER_NAME} -g ${ADMIN_GROUP_NAME} \
+#                     -G ${ADMIN_GROUP_NAME} -c "docker admin" ${ADMIN_USER_NAME} && \
             # sudoの設定 adminグループにsudoを全て許可する
-            echo "%admin ALL=(root) NOPASSWD: ALL" >>/etc/sudoers && \
+#             echo "%admin ALL=(root) NOPASSWD: ALL" >>/etc/sudoers && \
             # SHディレクトリ
-            chown -R root.admin ${SH} && \
+            chown -R root.root ${SH} && \
                 find ${SH} -name "*.sh" -exec chmod 775 {} \; && \ 
                 find ${SH} -type d -exec chmod 3775 {} \; && \
             #終了処理 
             cd ~/ && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/* && \
-#             rm -rf /root/${PORG_DEST} && \
             rm -rf /root/${GAWK_DEST}
 
