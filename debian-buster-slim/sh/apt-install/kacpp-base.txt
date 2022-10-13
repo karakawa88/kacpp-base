@@ -1,0 +1,10 @@
+procps
+iproute2
+iputils-ping
+curl
+wget
+gnupg
+sudo
+binutils
+# Git
+git
