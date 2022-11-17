@@ -5,25 +5,23 @@ SHELL       [ "/bin/bash", "-c" ]
 WORKDIR     /root
 ENV         DEBIAN_FORONTEND=noninteractive
 # GAWK関連環境変数
-ENV         GAWK_VERSION=5.1.0
+ENV         GAWK_VERSION=5.2.0
 ENV         GAWK_NAME=gawk-${GAWK_VERSION}
 ENV         GAWK_SRC_FILE=${GAWK_NAME}.tar.xz
-ENV         GAWK_URL=https://ftp.gnu.org/gnu/gawk/gawk-5.1.0.tar.xz
+ENV         GAWK_URL=https://ftp.gnu.org/gnu/gawk/${GAWK_SRC_FILE}
 ENV         GAWK_DEST=/root/${GAWK_NAME}
 # 開発環境インストール
-RUN         apt update \
-            && /usr/local/sh/system/apt-install.sh install gccdev.txt \
+RUN         apt update && \
             # gawkインストール
-            && wget ${GAWK_URL} && tar -Jxvf ${GAWK_SRC_FILE} && cd ${GAWK_NAME} \
-                &&  ./configure --prefix=/usr/local/${GAWK_NAME} \
-                && make && make install  \
-            && /usr/local/sh/system/apt-install.sh uninstall gccdev.txt \
-                && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
+            wget ${GAWK_URL} && tar -Jxvf ${GAWK_SRC_FILE} && cd ${GAWK_NAME} && \
+                ./configure --prefix=/usr/local/${GAWK_NAME} && \
+                make && make install  && \
+            apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
 FROM        kagalpandh/kacpp-ja
 SHELL       [ "/bin/bash", "-c" ]
 WORKDIR     /root
 # GAWK関連環境変数
-ENV         GAWK_VERSION=5.1.0
+ENV         GAWK_VERSION=5.2.0
 ENV         GAWK_DEST=gawk-${GAWK_VERSION}
 # 管理者用グループとユーザー関連環境変数
 # ENV         ADMIN_GID=116
@@ -42,18 +40,11 @@ RUN         apt update && \
             # 基本的なパッケージのインストール
             # パッケージのリストは/usr/local/sh/apt-install/kacpp-base.txtにある。
             $SH/system/apt-install.sh install kacpp-base.txt && \
-#             echo "/usr/local/lib" >>/etc/ld.so.conf && ldconfig && \
-            # 管理者用グループとユーザー作成
-#             groupadd -g ${ADMIN_GID} ${ADMIN_GROUP_NAME} && \
-#                 useradd -m -s /bin/bash -d /home/${ADMIN_USER_NAME} -g ${ADMIN_GROUP_NAME} \
-#                     -G ${ADMIN_GROUP_NAME} -c "docker admin" ${ADMIN_USER_NAME} && \
-            # sudoの設定 adminグループにsudoを全て許可する
-#             echo "%admin ALL=(root) NOPASSWD: ALL" >>/etc/sudoers && \
+            echo "/usr/local/lib" >>/etc/ld.so.conf && ldconfig && \
             # SHディレクトリ
             chown -R root.root ${SH} && \
                 find ${SH} -name "*.sh" -exec chmod 775 {} \; && \ 
                 find ${SH} -type d -exec chmod 3775 {} \; && \
             #終了処理 
-            cd ~/ && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/* && \
-            rm -rf /root/${GAWK_DEST}
+            cd ~/ && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
 
