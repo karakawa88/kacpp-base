@@ -1,0 +1,10 @@
+# Python
+libffi7
+libreadline8
+libssl1.1
+#PostgreSQL Client
+libpq5
+# psycopg2を入れるときに必要
+libpq-dev
+postgresql-client-13
+postgresql-common

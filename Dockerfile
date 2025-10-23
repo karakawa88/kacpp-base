@@ -42,7 +42,7 @@ RUN         apt update && \
             $SH/system/apt-install.sh install kacpp-base.txt && \
             echo "/usr/local/lib" >>/etc/ld.so.conf && ldconfig && \
             # SHディレクトリ
-            chown -R root.root ${SH} && \
+            chown -R root.admin ${SH} && \
                 find ${SH} -name "*.sh" -exec chmod 775 {} \; && \ 
                 find ${SH} -type d -exec chmod 3775 {} \; && \
             #終了処理 

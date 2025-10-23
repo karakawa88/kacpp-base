@@ -1,6 +1,7 @@
 # Python開発環境を持つdebianイメージ
+# 全てのベースとなるDockerイメージ
 # 日本語化も設定済み
-FROM        kagalpandh/kacpp-gccdev:8 AS builder
+FROM        kagalpandh/kacpp-dev AS builder
 SHELL       [ "/bin/bash", "-c" ]
 WORKDIR     /root
 ENV         DEBIAN_FORONTEND=noninteractive
@@ -11,15 +12,13 @@ ENV         GAWK_SRC_FILE=${GAWK_NAME}.tar.xz
 ENV         GAWK_URL=https://ftp.gnu.org/gnu/gawk/${GAWK_SRC_FILE}
 ENV         GAWK_DEST=/root/${GAWK_NAME}
 # 開発環境インストール
-RUN         apt update \
-            && /usr/local/sh/system/apt-install.sh install gccdev.txt \
+RUN         apt update && \
             # gawkインストール
-            && wget ${GAWK_URL} && tar -Jxvf ${GAWK_SRC_FILE} && cd ${GAWK_NAME} \
-                &&  ./configure --prefix=/usr/local/${GAWK_NAME} \
-                && make && make install  \
-            && /usr/local/sh/system/apt-install.sh uninstall gccdev.txt \
-                && apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
-FROM        kagalpandh/kacpp-ja:debian-buster-slim
+            wget ${GAWK_URL} && tar -Jxvf ${GAWK_SRC_FILE} && cd ${GAWK_NAME} && \
+                ./configure --prefix=/usr/local/${GAWK_NAME} && \
+                make && make install  && \
+            apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
+FROM        kagalpandh/kacpp-ja
 SHELL       [ "/bin/bash", "-c" ]
 WORKDIR     /root
 # GAWK関連環境変数
@@ -42,6 +41,7 @@ RUN         apt update && \
             # 基本的なパッケージのインストール
             # パッケージのリストは/usr/local/sh/apt-install/kacpp-base.txtにある。
             $SH/system/apt-install.sh install kacpp-base.txt && \
+            echo "/usr/local/lib" >>/etc/ld.so.conf && ldconfig && \
             # SHディレクトリ
             chown -R root.root ${SH} && \
                 find ${SH} -name "*.sh" -exec chmod 775 {} \; && \ 

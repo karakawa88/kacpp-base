@@ -2,18 +2,23 @@
 
 ## 概要
 マルチユーザー用にするためにsudoをいれ基本的なコマンドも追加したイメージ。
-kacpp-ja:debian-buster-slimがBase。
+管理者グループと管理者ユーザーを作成してある。
+<!--
+またソースコードパッケッジ管理porgも入れてある。
+-->
 
 ## 使い方
 ```shell
-docker image pull kagalpandh/kacpp-base
-docker run -dit --name kacpp-base kagalpandh/kacpp-base
+docker image pull kagalpandh/kacpp-base:0.1
+docker run -dit --name kacpp-base kagalpandh/kacpp-base:0.1
 ```
 
 ## 説明
 マルチユーザー用にイメージを作り変え基本的なコマンドを入れてある。
 gawk, wgetなど。
 ただやっていることはsudoの設定のみである。
+管理者用グループadmin(116)と管理者用ユーザーdockeradminを作成してある。
+adminグループはsudoをroot権限で実行可能。
 APTパッケージをAPTリストファイルをもとにインストール削除するapt-install.shスクリプトがある。
 
 ### SH シェルスクリプトディレクトリ
@@ -35,15 +40,21 @@ APTリストは/usr/local/sh/apt-installに配置しAPTパッケージが一行�
 指定しない場合はapt-installディレクトリの全てのAPTリストを使用する。
 
 ##構成
+管理者用グループ
+管理者用グループ    admin(116)
+管理者用ユーザー    dockeradmin
+sudoでadminグループはrootでコマンドを実行可能。
+
 システム用シェルスクリプトディレクトリ  /usr/local/sh
+
 APTリストスクリプト     /usr/local/sh/system/apt-install.sh
 APTリストディレクトリ   /usr/local/sh/apt-install
 このイメージで使用するのはkacpp-base.txtである。
 
 ##ベースイメージ
-kagalpandh/kacpp-ja:debian-buster-slim
+kagalpandh/kacpp-ja
 
 # その他
-DockerHub: [kagalpandh/kacpp-base:debian-buster-slim](https://hub.docker.com/repository/docker/kagalpandh/kacpp-base:debian-buster-slim)<br />
+DockerHub: [kagalpandh/kacpp-base:0.1](https://hub.docker.com/repository/docker/kagalpandh/kacpp-base)<br />
 GitHub: [karakawa88/kacpp-base](https://github.com/karakawa88/kacpp-base)
 

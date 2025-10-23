@@ -9,8 +9,8 @@
 
 ## 使い方
 ```shell
-docker image pull kagalpandh/kacpp-base
-docker run -dit --name kacpp-base kagalpandh/kacpp-base
+docker image pull kagalpandh/kacpp-base:0.1
+docker run -dit --name kacpp-base kagalpandh/kacpp-base:0.1
 ```
 
 ## 説明
@@ -55,6 +55,6 @@ APTリストディレクトリ   /usr/local/sh/apt-install
 kagalpandh/kacpp-ja
 
 # その他
-DockerHub: [kagalpandh/kacpp-base](https://hub.docker.com/repository/docker/kagalpandh/kacpp-base)<br />
+DockerHub: [kagalpandh/kacpp-base:0.1](https://hub.docker.com/repository/docker/kagalpandh/kacpp-base)<br />
 GitHub: [karakawa88/kacpp-base](https://github.com/karakawa88/kacpp-base)
 
