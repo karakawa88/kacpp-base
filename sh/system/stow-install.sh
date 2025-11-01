@@ -39,12 +39,12 @@ shift
 
 # STOWパッケージリストファイルを変数に格納する
 # 複数の場合はスペース区切り
-files=$@
+files="$@"
 if (($# <= 0))
 then
     files=$(ls $STOW_LIST_DIR | xargs echo)
 fi
-echo $files
+echo "$files"
 
 # 複数のSTOWパッケージリストファイルからSTOWのパッケージをインストールする
 for file in $files
@@ -54,11 +54,11 @@ do
         echo "Error: ファイルが見つかりません。[$path]" 1>&2
         exit 2
     fi
-    cat $path | grep -E -v '(^#.*)|(^[ \t]*$)' | xargs -I "{}" stow $STOW_OPTS "{}"
+    cat "$path" | grep -E -v '(^#.*)|(^[ \t]*$)' | xargs -I "{}" stow "$STOW_OPTS" "{}"
     if [[ ${PIPESTATUS[2]} -ne 0 ]]
     then
-        echo "Error STOWパッケージインストールエラー [$path]" 1>&2
-        cat $path >2
+        echo "Error STOWパッケージ$STOW_CMD [$path]" 1>&2
+        cat "$path" >2
         exit 3
     fi
 done
