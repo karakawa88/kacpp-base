@@ -6,5 +6,16 @@ wget
 gnupg
 sudo
 binutils
+#stow
+#stow
 # Git
 git
+# Python
+libffi8
+libreadline8
+libssl3
+# Tkinter GUI
+tcl
+tcllib
+tk
+

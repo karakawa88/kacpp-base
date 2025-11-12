@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#bashrcに読み込まれエイリアスと関数を定義する
+#ローカルタイムの設定
+export TZ="Asia/Tokyo"
+
+#ロケールの設定
+LANG=ja_JP.UTF-8
+LC_CTYPE="ja_JP.UTF-8"
+LC_NUMERIC="ja_JP.UTF-8"
+LC_TIME="ja_JP.UTF-8"
+LC_MONETARY="ja_JP.UTF-8"
+LC_MESSAGES="ja_JP.UTF-8"
+# export LC_ALL=ja_JP.UTF-8
+
+# 計算
+calc() {
+    awk "BEGIN{print $*}"
+}
+
+alias stow='stow -d /usr/local/stow '

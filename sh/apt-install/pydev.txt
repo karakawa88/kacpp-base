@@ -1,0 +1,8 @@
+# Python
+libffi8
+libreadline8
+libssl3
+# Tkinter GUI
+tcl-dev
+tk-dev
+

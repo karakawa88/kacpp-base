@@ -24,11 +24,14 @@ STOW_LIST_DIR=/usr/local/sh/stow-install
 
 
 # コマンド処理
-STOW_OPTS=" -vv "
+STOW_OPTS="  "
 STOW_CMD="install"
-if [[ $1 == "install" || $1 == "uninstall" ]]
-then
-    [[ $1 == "uninstall" ]] && STOW_CMD="uninstall"; STOW_OPTS=" -D "
+STOW_DIR="/usr/local/stow"
+if [[ $1 == "install" ]]; then
+    true
+elif [[ "$1" == "uninstall" ]]; then
+    STOW_CMD="uninstall"
+    STOW_OPTS=" -D "
 else
     echo "Error: install | uninstallのコマンドは必須です。"
     echo "$USAGE_STRING"
@@ -47,6 +50,7 @@ fi
 echo "$files"
 
 # 複数のSTOWパッケージリストファイルからSTOWのパッケージをインストールする
+cd "$STOW_DIR"
 for file in $files
 do
     path="$STOW_LIST_DIR/$file"
@@ -54,13 +58,18 @@ do
         echo "Error: ファイルが見つかりません。[$path]" 1>&2
         exit 2
     fi
-    cat "$path" | grep -E -v '(^#.*)|(^[ \t]*$)' | xargs -I "{}" stow "$STOW_OPTS" "{}"
-    if [[ ${PIPESTATUS[2]} -ne 0 ]]
-    then
-        echo "Error STOWパッケージ$STOW_CMD [$path]" 1>&2
-        cat "$path" >2
-        exit 3
-    fi
+
+    cat "$path" | grep -E -v '(^#.*)|(^[ \t]*$)' | \
+    while read line
+    do 
+        /usr/local/bin/stow "$STOW_OPTS" "$line"
+        if [[ ${PIPESTATUS[2]} -ne 0 ]]
+        then
+            echo "Error STOWパッケージ$STOW_CMD [$path]" 1>&2
+            cat "$path" >2
+            exit 3
+        fi
+    done
 done
 
 exit 0
