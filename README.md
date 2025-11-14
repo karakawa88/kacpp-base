@@ -2,15 +2,15 @@
 
 ## 概要
 マルチユーザー用にするためにsudoをいれ基本的なコマンドも追加したイメージ。
+Python環境とツールとしてgawkを入れてある。
+ソースパッケージを配置するstowも入っている。
+ソースパッケージとはソースからコンパイルして入れたもの。
 管理者グループと管理者ユーザーを作成してある。
-<!--
-またソースコードパッケッジ管理porgも入れてある。
--->
 
 ## 使い方
 ```shell
-docker image pull kagalpandh/kacpp-base:0.1
-docker run -dit --name kacpp-base kagalpandh/kacpp-base:0.1
+docker image pull kagalpandh/kacpp-base
+docker run -dit --name kacpp-base kagalpandh/kacpp-base
 ```
 
 ## 説明
@@ -20,6 +20,7 @@ gawk, wgetなど。
 管理者用グループadmin(116)と管理者用ユーザーdockeradminを作成してある。
 adminグループはsudoをroot権限で実行可能。
 APTパッケージをAPTリストファイルをもとにインストール削除するapt-install.shスクリプトがある。
+ソースパッケージをstowリストファイルをもとに配置削除するstow-install.shスクリプトがある。
 
 ### SH シェルスクリプトディレクトリ
 管理用シェルスクリプトが格納されるディレクトリ。
@@ -38,6 +39,19 @@ APTリストは/usr/local/sh/apt-installに配置しAPTパッケージが一行�
 コマンドにinstallかuninstallを指定。
 引数に削除・インストールするAPTパッケージのAPTリストファイルを指定するが
 指定しない場合はapt-installディレクトリの全てのAPTリストを使用する。
+### stow-install.sh
+ソースパッケージをstowリストをもとにインストール・削除するスクリプト。
+/usr/local/sh/systemに格納されている。
+stowリストは/usr/local/sh/stow-installに配置しソースパッケージが一行づつ記述されたテキストファイル。
+これに先頭行に#でコメントを入れることが可能。
+使用方法
+```shell
+/usr/local/sh/system/stow-install.sh install kacpp-base.txt # インンストール
+/usr/local/sh/system/stow-install.sh uninstall kacpp-base.txt # 削除
+```
+コマンドにinstallかuninstallを指定。
+引数に削除・インストールするソースパッケージのstowリストファイルを指定するが
+指定しない場合はstow-installディレクトリの全てのstowリストを使用する。
 
 ##構成
 管理者用グループ
@@ -49,6 +63,9 @@ sudoでadminグループはrootでコマンドを実行可能。
 
 APTリストスクリプト     /usr/local/sh/system/apt-install.sh
 APTリストディレクトリ   /usr/local/sh/apt-install
+このイメージで使用するのはkacpp-base.txtである。
+stowリストスクリプト     /usr/local/sh/system/stow-install.sh
+ソースリストディレクトリ   /usr/local/sh/stow-install
 このイメージで使用するのはkacpp-base.txtである。
 
 ##ベースイメージ
